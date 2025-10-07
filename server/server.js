@@ -4,8 +4,18 @@ import connectDB from "./config/db.js";
 import cors from "cors";
 
 const app = express();
-app.use(cors());
+
+// ✅ Enable CORS for all origins BEFORE routes
+app.use(cors({
+  origin: "*", // allow all origins
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+}));
+
+app.options("*", cors());
+
 app.use(express.json());
+
 
 connectDB();
 
@@ -33,11 +43,10 @@ app.use(
   })
 );
 
-app.get('/', function(req, res){
+
+app.get('/', (req, res) => {
     return res.json('Auth SDK running on http://localhost:3000');
 });
-
-app.options("*", cors());
 
 
 app.listen(3000, () => console.log("Auth SDK running on http://localhost:3000"));
