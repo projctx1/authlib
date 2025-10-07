@@ -37,4 +37,7 @@ app.get('/', function(req, res){
     return res.json('Auth SDK running on http://localhost:3000');
 });
 
+app.options("*", cors());
+
+
 app.listen(3000, () => console.log("Auth SDK running on http://localhost:3000"));
