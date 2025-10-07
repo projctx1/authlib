@@ -60,7 +60,11 @@ const createAuthSDK = (handlers = {}) => {
    */
   router.post("/register", async (req, res) => {
     try {
-      const result = await register(req.body);
+        const { email, password } = req.body; 
+     if (!email || !password)
+      throw new Error("Email and password are required");
+
+      const result = await register(email,password);
 
       if (handlers.onRegister) await handlers.onRegister(req, result);
 
@@ -82,7 +86,12 @@ const createAuthSDK = (handlers = {}) => {
    */
   router.post("/login", async (req, res) => {
     try {
-      const result = await login(req.body);
+        const { email, password } = req.body;  
+
+    if (!email || !password)
+      throw new Error("Email and password are required");
+
+      const result = await login(email, password);
 
       if (handlers.onLogin) await handlers.onLogin(req, result);
 
@@ -143,14 +152,16 @@ router.post("/login/verify-otp", async (req, res) => {
    */
   router.post("/forgot-password", async (req, res) => {
     try {
-      const result = await forgotPassword(req.body);
+        const { email } = req.body;
+
+      const result = await forgotPassword(email);
 
       if (handlers.onForgotPassword)
         await handlers.onForgotPassword(req, result);
 
       res.json({
         success: true,
-        message: "Reset link sent",
+        message: "Reset OTP sent",
         data: result,
       });
     } catch (err) {
@@ -166,7 +177,8 @@ router.post("/login/verify-otp", async (req, res) => {
    */
   router.post("/reset-password", async (req, res) => {
     try {
-      const result = await resetPassword(req.body);
+        const { email, otp, newPassword } = req.body;
+      const result = await resetPassword(email, otp, newPassword);
 
       if (handlers.onResetPassword)
         await handlers.onResetPassword(req, result);
@@ -189,7 +201,9 @@ router.post("/login/verify-otp", async (req, res) => {
    */
   router.post("/change-password", async (req, res) => {
     try {
-      const result = await changePassword(req.body);
+        const { token, oldPassword, newPassword } = req.body;
+
+      const result = await changePassword(token, oldPassword, newPassword);
 
       if (handlers.onChangePassword)
         await handlers.onChangePassword(req, result);
