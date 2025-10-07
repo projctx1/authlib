@@ -5,14 +5,18 @@ import cors from "cors";
 
 const app = express();
 
-// ✅ Enable CORS for all origins BEFORE routes
 app.use(cors({
-  origin: "*", // allow all origins
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
+  origin: [
+    'http://localhost:5173',  // Vite dev server
+    'http://localhost:3000',  // Alternative port
+    'http://localhost:4173',  // Vite preview
+    'https://your-frontend-domain.com'  // Add your production frontend URL
+  ],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
 }));
 
-app.options("*", cors());
 
 app.use(express.json());
 
