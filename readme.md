@@ -1,0 +1,4 @@
+MONGO_URI=mongodb://127.0.0.1:27017/authdb
+JWT_SECRET=12345678
+RESEND_API_KEY=api_key
+
