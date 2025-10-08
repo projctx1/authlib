@@ -1,0 +1,177 @@
+@use 'variables' as *;
+
+// Input base styles
+@mixin input-base {
+  width: 100%;
+  padding: $spacing-md;
+  font-size: $font-size-base;
+  font-family: $font-family;
+  color: var(--text-primary);
+  background-color: var(--bg-primary);
+  border: $border-width solid var(--border-color);
+  border-radius: $border-radius-md;
+  transition: all $transition-base;
+  outline: none;
+  
+  &::placeholder {
+    color: var(--text-tertiary);
+  }
+  
+  &:focus {
+    border-color: $primary-color;
+    box-shadow: 0 0 0 3px rgba($primary-color, 0.1);
+  }
+  
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background-color: var(--bg-disabled);
+  }
+  
+  &.has-error {
+    border-color: $error-color;
+    
+    &:focus {
+      box-shadow: 0 0 0 3px rgba($error-color, 0.1);
+    }
+  }
+}
+
+// Button base styles
+@mixin button-base {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: $spacing-md $spacing-lg;
+  font-size: $font-size-base;
+  font-weight: $font-weight-medium;
+  font-family: $font-family;
+  line-height: $line-height-tight;
+  border: none;
+  border-radius: $border-radius-md;
+  cursor: pointer;
+  transition: all $transition-base;
+  outline: none;
+  white-space: nowrap;
+  user-select: none;
+  
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  
+  &:focus-visible {
+    outline: 2px solid $primary-color;
+    outline-offset: 2px;
+  }
+}
+
+// Button variants
+@mixin button-primary {
+  @include button-base;
+  color: white;
+  background-color: $primary-color;
+  
+  &:hover:not(:disabled) {
+    background-color: $primary-hover;
+  }
+  
+  &:active:not(:disabled) {
+    background-color: $primary-active;
+  }
+}
+
+@mixin button-secondary {
+  @include button-base;
+  color: var(--text-primary);
+  background-color: var(--bg-secondary);
+  border: $border-width solid var(--border-color);
+  
+  &:hover:not(:disabled) {
+    background-color: var(--bg-tertiary);
+  }
+}
+
+@mixin button-text {
+  @include button-base;
+  color: $primary-color;
+  background-color: transparent;
+  padding: $spacing-sm $spacing-md;
+  
+  &:hover:not(:disabled) {
+    background-color: $primary-light;
+  }
+}
+
+// Form error message
+@mixin form-error {
+  display: block;
+  margin-top: $spacing-xs;
+  color: $error-color;
+  font-size: $font-size-sm;
+  line-height: $line-height-normal;
+}
+
+// Form hint message
+@mixin form-hint {
+  display: block;
+  margin-top: $spacing-xs;
+  color: var(--text-secondary);
+  font-size: $font-size-sm;
+  line-height: $line-height-normal;
+}
+
+// Card styles
+@mixin card-base {
+  background-color: var(--bg-primary);
+  border: $border-width solid var(--border-color);
+  border-radius: $border-radius-lg;
+  box-shadow: $shadow-md;
+  padding: $spacing-xl;
+}
+
+// Flex utilities
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+// Truncate text
+@mixin truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// Screen reader only
+@mixin sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+// Responsive breakpoints
+@mixin responsive($breakpoint) {
+  @if $breakpoint == sm {
+    @media (min-width: $breakpoint-sm) { @content; }
+  } @else if $breakpoint == md {
+    @media (min-width: $breakpoint-md) { @content; }
+  } @else if $breakpoint == lg {
+    @media (min-width: $breakpoint-lg) { @content; }
+  } @else if $breakpoint == xl {
+    @media (min-width: $breakpoint-xl) { @content; }
+  }
+}

@@ -1,0 +1,205 @@
+@use '../variables' as *;
+@use '../mixins' as *;
+
+.auth-input-wrapper {
+  margin-bottom: $spacing-md;
+  width: 100%;
+}
+
+.auth-input-label {
+  display: block;
+  margin-bottom: $spacing-xs;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: var(--text-primary);
+  
+  .auth-input-required {
+    color: $error-color;
+    margin-left: $spacing-xs;
+  }
+}
+
+.auth-input-container {
+  position: relative;
+  width: 100%;
+}
+
+.auth-input {
+  @include input-base;
+  
+  &.has-icon {
+    padding-left: 2.75rem;
+  }
+  
+  &.has-icon-right {
+    padding-right: 2.75rem;
+  }
+}
+
+.auth-input-icon {
+  position: absolute;
+  left: $spacing-md;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-secondary);
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  svg {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+  
+  &.icon-right {
+    left: auto;
+    right: $spacing-md;
+  }
+  
+  &.icon-clickable {
+    pointer-events: auto;
+    cursor: pointer;
+    
+    &:hover {
+      color: var(--text-primary);
+    }
+  }
+}
+
+.auth-input-error {
+  @include form-error;
+}
+
+.auth-input-hint {
+  @include form-hint;
+}
+
+// Password strength indicator
+.password-strength {
+  margin-top: $spacing-sm;
+  
+  .strength-bar {
+    height: 4px;
+    background-color: var(--bg-secondary);
+    border-radius: $border-radius-full;
+    overflow: hidden;
+    
+    .strength-fill {
+      height: 100%;
+      transition: all $transition-base;
+      border-radius: $border-radius-full;
+    }
+  }
+  
+  .strength-label {
+    display: block;
+    margin-top: $spacing-xs;
+    font-size: $font-size-xs;
+    font-weight: $font-weight-medium;
+  }
+}
+
+// OTP Input
+.otp-input-wrapper {
+  margin-bottom: $spacing-md;
+}
+
+.otp-input-label {
+  display: block;
+  margin-bottom: $spacing-md;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: var(--text-primary);
+  text-align: center;
+}
+
+.otp-input-container {
+  display: flex;
+  gap: $spacing-sm;
+  justify-content: center;
+  
+  .otp-digit {
+    width: 3rem;
+    height: 3.5rem;
+    text-align: center;
+    font-size: $font-size-xl;
+    font-weight: $font-weight-semibold;
+    border: $border-width-thick solid var(--border-color);
+    border-radius: $border-radius-md;
+    transition: all $transition-base;
+    
+    &:focus {
+      outline: none;
+      border-color: $primary-color;
+      box-shadow: 0 0 0 3px rgba($primary-color, 0.1);
+    }
+    
+    &.has-value {
+      border-color: $primary-color;
+    }
+    
+    &.has-error {
+      border-color: $error-color;
+      animation: shake 0.5s;
+    }
+  }
+}
+
+.otp-timer {
+  margin-top: $spacing-md;
+  text-align: center;
+  font-size: $font-size-sm;
+  color: var(--text-secondary);
+  
+  .expired {
+    color: $error-color;
+    font-weight: $font-weight-medium;
+  }
+}
+
+.otp-resend {
+  @include button-text;
+  display: block;
+  margin: $spacing-md auto 0;
+}
+
+.otp-error {
+  @include form-error;
+  text-align: center;
+  margin-top: $spacing-md;
+}
+
+// Checkbox
+.auth-checkbox {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+  
+  input[type="checkbox"] {
+    width: 1.125rem;
+    height: 1.125rem;
+    margin-right: $spacing-sm;
+    cursor: pointer;
+    accent-color: $primary-color;
+  }
+  
+  label {
+    font-size: $font-size-sm;
+    color: var(--text-primary);
+    cursor: pointer;
+  }
+}
+
+// Select
+.auth-select {
+  @include input-base;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3E%3C/svg%3E");
+  background-position: right $spacing-md center;
+  background-repeat: no-repeat;
+  background-size: 1.5rem;
+  padding-right: 2.5rem;
+  appearance: none;
+}
