@@ -40,7 +40,7 @@ const validDomains = [
   // Apple
   'icloud.com', 'me.com', 'mac.com',
   // Other major providers
-  'aol.com', 'protonmail.com', 'tutanota.com'
+  'aol.com', 'protonmail.com', 'proton.me',  'tutanota.com'
 ]
 
 // Valid TLDs for business/personal domains

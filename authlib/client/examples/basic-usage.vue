@@ -113,12 +113,10 @@
 <script>
 import { ref, computed } from 'vue'
 import { useStore } from 'vuex'
-import { 
-  LoginForm, 
-  RegisterForm, 
-  ForgotPasswordForm, 
-  OTPVerificationForm 
-} from 'vue-auth-sdk'
+import LoginForm from '../src/components/composites/LoginForm.vue'
+import RegisterForm from '../src/components/composites/RegisterForm.vue'
+import ForgotPasswordForm from '../src/components/composites/ForgotPasswordForm.vue'
+import OTPVerificationForm from '../src/components/composites/OTPVerificationForm.vue'
 
 export default {
   name: 'BasicUsageExample',

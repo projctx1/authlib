@@ -16,9 +16,11 @@ const API = axios.create({
   }
 })
 
+
 // Request interceptor - Add JWT token to all requests
 API.interceptors.request.use(
   (config) => {
+    config.withCredentials = false
     const token = localStorage.getItem('auth_token')
     if (token) {
       config.headers.Authorization = `Bearer ${token}`
@@ -48,7 +50,9 @@ API.interceptors.response.use(
         if (refreshToken) {
           const response = await axios.post(`${API.defaults.baseURL}/auth/refresh`, {
             refreshToken
-          })
+          },
+            { withCredentials: false }
+          )
           
           if (response.data.success) {
             const { token } = response.data.data

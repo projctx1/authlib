@@ -15,8 +15,6 @@
       <SubmitButton :is-loading="isLoading || isRegistering" :disabled="!isFormValid || isRegistering" full-width>
         {{ isRegistering ? 'Creating Account...' : 'Create Account' }}
       </SubmitButton>
-      
-      <SocialLoginButtons :providers="['google', 'github']" :disabled="isRegistering" @social-login="handleSocialLogin" />
     </form>
     
     <template #footer>

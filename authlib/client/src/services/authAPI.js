@@ -14,7 +14,9 @@ export const authAPI = {
     const response = await API.post('/auth/login', {
       email: credentials.email,
       password: credentials.password
-    })
+    },
+      { withCredentials: false }
+    )
     
     // Handle backend response wrapper
     if (!response.data.success) {
@@ -36,15 +38,19 @@ export const authAPI = {
       email: userData.email,
       password: userData.password
     })
-    
+
     if (!response.data.success) {
       throw new Error(response.data.message || 'Registration failed')
     }
-    
+
+    // Handle server's response format: { message: "User registered", id: user._id }
     return {
-      user: response.data.data.user,
-      token: response.data.data.token || response.data.data.accessToken,
-      refreshToken: response.data.data.refreshToken
+      user: {
+        id: response.data.data.id,
+        email: userData.email,
+        message: response.data.data.message
+      },
+      message: response.data.data.message
     }
   },
 

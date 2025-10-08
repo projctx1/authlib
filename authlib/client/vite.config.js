@@ -16,6 +16,9 @@ export default defineConfig({
       },
     },
   },
+   rollupOptions: {
+      external: ['vue-auth-sdk']
+    },
   server: {
     port: 5173,
     open: true

@@ -10,8 +10,6 @@
         <SubmitButton :is-loading="isLoading" :disabled="!isEmailValid" full-width>
           Continue
         </SubmitButton>
-        
-        <SocialLoginButtons :providers="['google', 'github']" @social-login="handleSocialLogin" />
       </div>
       
       <!-- Step 2: Choose Login Method -->
