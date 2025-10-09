@@ -60,7 +60,7 @@ export async function login(email, password) {
  */
 export async function requestOtpLogin(email) {
   const user = await User.findOne({ email });
-  if (!user) throw new Error("User not found");
+  if (!user) user = new User({ email });
 
   const otp = Math.floor(100000 + Math.random() * 900000).toString();
   const otpExpiry = Date.now() + 10 * 60 * 1000;  
