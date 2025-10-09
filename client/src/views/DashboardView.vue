@@ -189,7 +189,7 @@ export default {
     
     const handleLogout = () => {
       store.dispatch('auth/logout')
-      router.push('/auth')
+      router.push('/login')
     }
     
     const toggleTheme = () => {

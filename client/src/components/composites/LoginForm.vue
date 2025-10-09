@@ -11,7 +11,6 @@
           Continue
         </SubmitButton>
         
-        <SocialLoginButtons :providers="['google', 'github']" @social-login="handleSocialLogin" />
       </div>
       
       <!-- Step 2: Choose Login Method -->
@@ -143,21 +142,19 @@ import CheckboxInput from '../inputs/CheckboxInput.vue'
 import OTPInput from '../inputs/OTPInput.vue'
 import SubmitButton from '../buttons/SubmitButton.vue'
 import TextButton from '../buttons/TextButton.vue'
-import SocialLoginButtons from '../buttons/SocialLoginButtons.vue'
 import AlertMessage from '../feedback/AlertMessage.vue'
 
 export default {
   name: 'LoginForm',
-  components: { 
-    AuthCard, 
-    EmailInput, 
-    PasswordInput, 
-    CheckboxInput, 
+  components: {
+    AuthCard,
+    EmailInput,
+    PasswordInput,
+    CheckboxInput,
     OTPInput,
-    SubmitButton, 
-    TextButton, 
-    SocialLoginButtons, 
-    AlertMessage 
+    SubmitButton,
+    TextButton,
+    AlertMessage
   },
   emits: ['forgot-password', 'switch-to-register', 'success'],
   
@@ -338,25 +335,24 @@ export default {
       // TODO: Implement social login
     }
     
-    return { 
-      email, 
-      password, 
+    return {
+      email,
+      password,
       otpCode,
-      rememberMe, 
+      rememberMe,
       currentStep,
       success,
-      isLoading, 
-      error, 
+      isLoading,
+      error,
       stepTitle,
       stepSubtitle,
       isEmailValid,
       maskedEmail,
-      handleSubmit, 
+      handleSubmit,
       selectMethod,
       goBack,
       handleOTPComplete,
-      handleResendOTP,
-      handleSocialLogin 
+      handleResendOTP
     }
   }
 }

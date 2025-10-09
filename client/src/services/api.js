@@ -5,9 +5,13 @@
 
 import axios from 'axios'
 
-// Create axios instance with base configuration
+// Create API configuration
 const baseURL = import.meta.env.VITE_API_URL || 'https://authlib.vercel.app'
 
+// Export baseURL for use in components
+export { baseURL }
+
+// Create axios instance with base configuration
 const API = axios.create({
   baseURL,
   timeout: 15000,

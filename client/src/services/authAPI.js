@@ -65,17 +65,17 @@ export const authAPI = {
    * Verify OTP and complete login
    */
   async verifyLoginOTP(email, otp) {
-    const response = await API.post('/auth/login/verify-otp', { 
-      email, 
-      otp 
+    const response = await API.post('/auth/login/verify-otp', {
+      email,
+      otp
     })
-    
+
     if (!response.data.success) {
       throw new Error(response.data.message || 'OTP verification failed')
     }
-    
+
     return {
-      user: response.data.data.user,
+      user: { email }, // Backend doesn't return user data, so we create it
       token: response.data.data.token || response.data.data.accessToken,
       refreshToken: response.data.data.refreshToken
     }

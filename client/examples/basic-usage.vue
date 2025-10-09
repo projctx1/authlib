@@ -113,12 +113,11 @@
 <script>
 import { ref, computed } from 'vue'
 import { useStore } from 'vuex'
-import { 
-  LoginForm, 
-  RegisterForm, 
-  ForgotPasswordForm, 
-  OTPVerificationForm 
-} from 'vue-auth-sdk'
+import { useRouter } from 'vue-router'
+import LoginForm from '../src/components/composites/LoginForm.vue'
+import RegisterForm from '../src/components/composites/RegisterForm.vue'
+import ForgotPasswordForm from '../src/components/composites/ForgotPasswordForm.vue'
+import OTPVerificationForm from '../src/components/composites/OTPVerificationForm.vue'
 
 export default {
   name: 'BasicUsageExample',
@@ -131,6 +130,7 @@ export default {
   
   setup() {
     const store = useStore()
+    const router = useRouter()
     const showAuth = ref(false)
     const authMode = ref('login')
     
@@ -181,6 +181,8 @@ export default {
         type: 'info',
         message: 'You have been logged out'
       })
+      // Redirect to login page after logout
+      router.push('/login')
     }
     
     const toggleTheme = () => {

@@ -16,7 +16,6 @@
         {{ isRegistering ? 'Creating Account...' : 'Create Account' }}
       </SubmitButton>
       
-      <SocialLoginButtons :providers="['google', 'github']" :disabled="isRegistering" @social-login="handleSocialLogin" />
     </form>
     
     <template #footer>
@@ -39,21 +38,19 @@ import TextInput from '../inputs/TextInput.vue'
 import CheckboxInput from '../inputs/CheckboxInput.vue'
 import SubmitButton from '../buttons/SubmitButton.vue'
 import TextButton from '../buttons/TextButton.vue'
-import SocialLoginButtons from '../buttons/SocialLoginButtons.vue'
 import AlertMessage from '../feedback/AlertMessage.vue'
 
 export default {
   name: 'RegisterForm',
-  components: { 
-    AuthCard, 
-    EmailInput, 
-    PasswordInput, 
-    TextInput, 
-    CheckboxInput, 
-    SubmitButton, 
-    TextButton, 
-    SocialLoginButtons, 
-    AlertMessage 
+  components: {
+    AuthCard,
+    EmailInput,
+    PasswordInput,
+    TextInput,
+    CheckboxInput,
+    SubmitButton,
+    TextButton,
+    AlertMessage
   },
   emits: ['switch-to-login', 'success'],
   
@@ -173,8 +170,7 @@ export default {
       isRegistering,
       error,
       isFormValid,
-      handleSubmit,
-      handleSocialLogin
+      handleSubmit
     }
   }
 }
