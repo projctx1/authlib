@@ -59,7 +59,7 @@ export async function login(email, password) {
  * Generates a one-time OTP and sends it to the user's email.
  */
 export async function requestOtpLogin(email) {
-  const user = await User.findOne({ email });
+  let user = await User.findOne({ email });
   if (!user) user = new User({ email });
 
   const otp = Math.floor(100000 + Math.random() * 900000).toString();
