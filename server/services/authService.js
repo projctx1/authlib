@@ -38,6 +38,16 @@ export async function register(email, password) {
   return { message: "User registered", id: user._id };
 }
 
+
+/**
+ * Find user by email
+ */
+export async function findUser(email) {
+  const user = await User.findOne({ email });
+  return !user;
+}
+
+
 /**
  * Login user and return JWT
  */
