@@ -8,6 +8,7 @@ import {
   changePassword,
   requestOtpLogin,
   verifyOtpLogin,
+  findUser,
   initAuth,
 } from "../services/authService.js";
 
@@ -34,24 +35,41 @@ const createAuthSDK = (handlers = {}) => {
   const router = express.Router();
 
   /**
-    * GET /init
-    * -------------------------------------------------------
-    * Initializes authentication service.
-    * Useful for setup or verification of auth service readiness.
-    */
-   router.get("/init", async (req, res) => {
-     try {
-       const result = await initAuth();
-       res.json({
-         success: true,
-         message: "Auth initialized",
-         data: result,
-       });
-     } catch (err) {
-       res.status(500).json({ success: false, message: err.message });
-     }
-   });
-
+   * GET /init
+   * -------------------------------------------------------
+   * Initializes authentication service.
+   * Useful for setup or verification of auth service readiness.
+   */
+  router.get("/init", async (req, res) => {
+    try {
+      const result = await initAuth();
+      res.json({
+        success: true,
+        message: "Auth initialized",
+        data: result,
+      });
+    } catch (err) {
+      res.status(500).json({ success: false, message: err.message });
+    }
+  });
+  
+  /**
+   * GET /check user
+   * -------------------------------------------------------
+   * check user validity
+   */
+  router.post("/check-email", async (req, res) => {
+    try {
+      const {email} = req.body;
+      const result = await findUser(email);
+      res.json({
+        success: true,
+        is_valid: result,
+      });
+    } catch (err) {
+      res.status(500).json({ success: false, message: err.message });
+    }
+  });
 
   /**
    * POST /register
