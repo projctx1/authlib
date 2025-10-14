@@ -40,6 +40,7 @@
 <script>
 import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
 import { useStore } from 'vuex'
+import { isValidOTP } from '../../utils/validators'
 
 export default {
   name: 'OTPInput',
@@ -118,20 +119,31 @@ export default {
     
     const handleInput = (index, event) => {
       const value = event.target.value
-      
-      // Only allow numbers
-      if (!/^\d*$/.test(value)) {
+
+      // Only allow single digits
+      if (!/^\d?$/.test(value)) {
         digits.value[index] = ''
         return
       }
-      
+
       digits.value[index] = value
-      
+
       // Auto-focus next input
       if (value && index < props.length - 1) {
         inputRefs.value[index + 1]?.focus()
       }
     }
+
+    // Validate OTP using our validator utility
+    const validateOTP = () => {
+      const otpValue = code.value
+      return isValidOTP(otpValue, props.length)
+    }
+
+    // Check if OTP is complete and valid
+    const isCompleteAndValid = computed(() => {
+      return code.value.length === props.length && validateOTP()
+    })
     
     const handleKeydown = (index, event) => {
       // Handle backspace
@@ -180,10 +192,12 @@ export default {
       isExpired,
       countdown,
       resendCountdown,
+      isCompleteAndValid,
       handleInput,
       handleKeydown,
       handlePaste,
-      handleResend
+      handleResend,
+      validateOTP
     }
   }
 }

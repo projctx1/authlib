@@ -34,23 +34,24 @@ const createAuthSDK = (handlers = {}) => {
   const router = express.Router();
 
   /**
-   * GET /init
-   * -------------------------------------------------------
-   * Initializes authentication service.
-   * Useful for setup or verification of auth service readiness.
-   */
-  router.get("/init", async (req, res) => {
-    try {
-      const result = await initAuth();
-      res.json({
-        success: true,
-        message: "Auth initialized",
-        data: result,
-      });
-    } catch (err) {
-      res.status(500).json({ success: false, message: err.message });
-    }
-  });
+    * GET /init
+    * -------------------------------------------------------
+    * Initializes authentication service.
+    * Useful for setup or verification of auth service readiness.
+    */
+   router.get("/init", async (req, res) => {
+     try {
+       const result = await initAuth();
+       res.json({
+         success: true,
+         message: "Auth initialized",
+         data: result,
+       });
+     } catch (err) {
+       res.status(500).json({ success: false, message: err.message });
+     }
+   });
+
 
   /**
    * POST /register
@@ -136,12 +137,13 @@ router.post("/login/verify-otp", async (req, res) => {
   try {
     const { email, otp } = req.body;
     const result = await verifyOtpLogin(email, otp);
-   if (handlers.onLogin) await handlers.onLogin(req, result);
+    if (handlers.onLogin) await handlers.onLogin(req, result);
     res.json({ success: true, data: result });
   } catch (err) {
     res.status(400).json({ success: false, message: err.message });
   }
 });
+
 
 
   /**

@@ -5,6 +5,7 @@
  */
 
 import API from './api.js'
+import { secureStorage } from '../utils/secureStorage.js'
 
 export const authAPI = {
   /**
@@ -49,15 +50,37 @@ export const authAPI = {
   },
 
   /**
+   * Check if email exists in database
+   */
+  async checkEmail(email) {
+    const response = await API.post('/auth/check-email', { email })
+
+    if (!response.data.success) {
+      throw new Error(response.data.message || 'Email check failed')
+    }
+
+    // Backend returns: { success: true, is_valid: boolean }
+    // is_valid: true means user doesn't exist (needs registration)
+    // is_valid: false means user exists (can proceed with login)
+    const isValid = response.data.is_valid
+
+    return {
+      exists: !isValid, // If is_valid is false, user exists
+      requiresRegistration: isValid, // If is_valid is true, needs registration
+      isValid: isValid
+    }
+  },
+
+  /**
    * Send OTP for login
    */
   async sendLoginOTP(email) {
     const response = await API.post('/auth/login/request-otp', { email })
-    
+
     if (!response.data.success) {
       throw new Error(response.data.message || 'Failed to send OTP')
     }
-    
+
     return response.data.data
   },
 
@@ -174,10 +197,10 @@ export const authAPI = {
    * Logout user
    */
   async logout() {
-    const refreshToken = localStorage.getItem('refresh_token')
-    if (refreshToken) {
+    const tokenData = secureStorage.getToken()
+    if (tokenData && tokenData.refreshToken) {
       try {
-        await API.post('/logout', { refreshToken })
+        await API.post('/logout', { refreshToken: tokenData.refreshToken })
       } catch (error) {
         console.error('Logout API call failed:', error)
       }

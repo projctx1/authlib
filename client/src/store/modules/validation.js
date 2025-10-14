@@ -1,46 +1,4 @@
-const validateRules = (value, rules) => {
-  if (!rules || rules.length === 0) return null
-  
-  for (const rule of rules) {
-    if (rule === 'required' && (!value || value.trim() === '')) {
-      return 'This field is required'
-    }
-    
-    if (rule === 'email') {
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-      if (value && !emailRegex.test(value)) {
-        return 'Please enter a valid email'
-      }
-    }
-    
-    if (rule === 'phone') {
-      const phoneRegex = /^[+]?[(]?[0-9]{1,4}[)]?[-\s.]?[(]?[0-9]{1,4}[)]?[-\s.]?[0-9]{1,9}$/
-      if (value && !phoneRegex.test(value)) {
-        return 'Please enter a valid phone number'
-      }
-    }
-    
-    if (typeof rule === 'object' && rule.minLength) {
-      if (value && value.length < rule.minLength) {
-        return `Minimum ${rule.minLength} characters required`
-      }
-    }
-    
-    if (typeof rule === 'object' && rule.maxLength) {
-      if (value && value.length > rule.maxLength) {
-        return `Maximum ${rule.maxLength} characters allowed`
-      }
-    }
-    
-    if (typeof rule === 'object' && rule.pattern) {
-      if (value && !rule.pattern.test(value)) {
-        return rule.message || 'Invalid format'
-      }
-    }
-  }
-  
-  return null
-}
+import { validationService } from '../../services/validationService.js'
 
 export default {
   namespaced: true,
@@ -73,19 +31,19 @@ export default {
   },
   
   actions: {
-    validateField({ commit }, { field, value, rules }) {
+    async validateField({ commit }, { field, value, rules }) {
       commit('SET_VALIDATING', { field, validating: true })
-      
-      const error = validateRules(value, rules)
-      
-      if (error) {
-        commit('SET_ERROR', { field, error })
+
+      const result = await validationService.validateField(field, value, rules)
+
+      if (!result.valid) {
+        commit('SET_ERROR', { field, error: result.error })
       } else {
         commit('CLEAR_ERROR', field)
       }
-      
+
       commit('SET_VALIDATING', { field, validating: false })
-      return !error
+      return result.valid
     },
     
     touchField({ commit }, field) {
@@ -94,6 +52,7 @@ export default {
     
     clearField({ commit }, field) {
       commit('CLEAR_ERROR', field)
+      validationService.clearField(field)
     },
     
     clearAll({ commit }) {
@@ -102,10 +61,10 @@ export default {
   },
   
   getters: {
-    getError: (state) => (field) => state.errors[field],
+    getError: (state) => (field) => state.errors[field] || validationService.getError(field),
     isTouched: (state) => (field) => state.touched[field],
     isValidating: (state) => (field) => state.validating[field],
-    hasErrors: (state) => Object.keys(state.errors).length > 0,
-    isValid: (state) => Object.keys(state.errors).length === 0
+    hasErrors: (state) => Object.keys(state.errors).length > 0 || !validationService.isFormValid(Object.keys(state.errors)),
+    isValid: (state) => Object.keys(state.errors).length === 0 && validationService.isFormValid(Object.keys(state.errors))
   }
 }

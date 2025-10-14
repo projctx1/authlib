@@ -63,7 +63,7 @@ export async function requestOtpLogin(email) {
   if (!user) user = new User({ email });
 
   const otp = Math.floor(100000 + Math.random() * 900000).toString();
-  const otpExpiry = Date.now() + 10 * 60 * 1000;  
+  const otpExpiry = Date.now() + 10 * 60 * 1000;
 
   user.loginOTP = otp;
   user.loginOTPExpiry = otpExpiry;

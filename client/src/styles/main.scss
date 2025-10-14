@@ -4,6 +4,9 @@
 @use 'mixins' as *;
 @use 'themes' as *;
 
+// Import CSS variables (no @use since it's pure CSS)
+@import 'variables-css';
+
 // Component styles
 @import 'components/inputs';
 @import 'components/buttons';
@@ -55,12 +58,12 @@ html {
 body {
   margin: 0;
   padding: 0;
-  font-family: $font-family;
-  font-size: $font-size-base;
-  line-height: $line-height-normal;
+  font-family: var(--auth-font-family, #{$font-family});
+  font-size: var(--auth-font-size-base, #{$font-size-base});
+  line-height: var(--auth-line-height-normal, #{$line-height-normal});
   color: var(--text-primary);
   background-color: var(--bg-secondary);
-  transition: background-color $transition-base;
+  transition: background-color var(--auth-transition-base, #{$transition-base});
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -68,16 +71,16 @@ body {
 // Typography
 h1, h2, h3, h4, h5, h6 {
   margin: 0;
-  font-weight: $font-weight-semibold;
-  line-height: $line-height-tight;
+  font-weight: var(--auth-font-weight-semibold, #{$font-weight-semibold});
+  line-height: var(--auth-line-height-tight, #{$line-height-tight});
   color: var(--text-primary);
 }
 
-h1 { font-size: $font-size-3xl; }
-h2 { font-size: $font-size-2xl; }
-h3 { font-size: $font-size-xl; }
-h4 { font-size: $font-size-lg; }
-h5, h6 { font-size: $font-size-base; }
+h1 { font-size: var(--auth-font-size-3xl, #{$font-size-3xl}); }
+h2 { font-size: var(--auth-font-size-2xl, #{$font-size-2xl}); }
+h3 { font-size: var(--auth-font-size-xl, #{$font-size-xl}); }
+h4 { font-size: var(--auth-font-size-lg, #{$font-size-lg}); }
+h5, h6 { font-size: var(--auth-font-size-base, #{$font-size-base}); }
 
 p {
   margin: 0;
@@ -85,67 +88,67 @@ p {
 }
 
 a {
-  color: $primary-color;
+  color: var(--auth-primary-color, #{$primary-color});
   text-decoration: none;
-  transition: color $transition-base;
-  
+  transition: color var(--auth-transition-base, #{$transition-base});
+
   &:hover {
-    color: $primary-hover;
+    color: var(--auth-primary-hover, #{$primary-hover});
   }
-  
+
   &:focus-visible {
-    outline: 2px solid $primary-color;
+    outline: 2px solid var(--auth-primary-color, #{$primary-color});
     outline-offset: 2px;
-    border-radius: $border-radius-sm;
+    border-radius: var(--auth-border-radius-sm, #{$border-radius-sm});
   }
 }
 
 // Focus visible styles
 *:focus-visible {
-  outline: 2px solid $primary-color;
+  outline: 2px solid var(--auth-primary-color, #{$primary-color});
   outline-offset: 2px;
 }
 
 // Selection styles
 ::selection {
-  background-color: rgba($primary-color, 0.2);
+  background-color: rgba(var(--auth-primary-color, #{$primary-color}), 0.2);
   color: var(--text-primary);
 }
 
 // Form styles
 .auth-form {
   width: 100%;
-  
+
   .form-row {
     @include flex-between;
-    margin-bottom: $spacing-lg;
-    gap: $spacing-md;
+    margin-bottom: var(--auth-spacing-lg, #{$spacing-lg});
+    gap: var(--auth-spacing-md, #{$spacing-md});
   }
-  
+
   .form-group {
-    margin-bottom: $spacing-lg;
+    margin-bottom: var(--auth-spacing-lg, #{$spacing-lg});
   }
 }
 
 // Feedback components
 .loading-spinner {
   @include flex-center;
-  
+
   .spinner {
     width: 2rem;
     height: 2rem;
     border: 3px solid var(--bg-secondary);
-    border-top-color: $primary-color;
-    border-radius: $border-radius-full;
+    border-top-color: var(--auth-primary-color, #{$primary-color});
+    border-radius: var(--auth-border-radius-full, #{$border-radius-full});
     animation: spin 0.8s linear infinite;
   }
-  
+
   &.small .spinner {
     width: 1rem;
     height: 1rem;
     border-width: 2px;
   }
-  
+
   &.large .spinner {
     width: 3rem;
     height: 3rem;
@@ -154,50 +157,50 @@ a {
 }
 
 .alert-message {
-  padding: $spacing-md;
-  border-radius: $border-radius-md;
-  margin-bottom: $spacing-lg;
+  padding: var(--auth-spacing-md, #{$spacing-md});
+  border-radius: var(--auth-border-radius-md, #{$border-radius-md});
+  margin-bottom: var(--auth-spacing-lg, #{$spacing-lg});
   display: flex;
   align-items: flex-start;
-  gap: $spacing-sm;
-  
+  gap: var(--auth-spacing-sm, #{$spacing-sm});
+
   .alert-icon {
     flex-shrink: 0;
     width: 1.25rem;
     height: 1.25rem;
   }
-  
+
   .alert-content {
     flex: 1;
-    
+
     .alert-title {
-      font-weight: $font-weight-medium;
-      margin-bottom: $spacing-xs;
+      font-weight: var(--auth-font-weight-medium, #{$font-weight-medium});
+      margin-bottom: var(--auth-spacing-xs, #{$spacing-xs});
     }
-    
+
     .alert-message {
-      font-size: $font-size-sm;
+      font-size: var(--auth-font-size-sm, #{$font-size-sm});
     }
   }
-  
+
   &.success {
-    background-color: $success-light;
-    color: color.adjust($success-color, $lightness: -10%);
+    background-color: var(--auth-success-light, #{$success-light});
+    color: var(--auth-success-color, #{$success-color});
   }
-  
+
   &.error {
-    background-color: $error-light;
-    color: color.adjust($error-color, $lightness: -10%);
+    background-color: var(--auth-error-light, #{$error-light});
+    color: var(--auth-error-color, #{$error-color});
   }
-  
+
   &.warning {
-    background-color: $warning-light;
-    color: color.adjust($warning-color, $lightness: -15%);
+    background-color: var(--auth-warning-light, #{$warning-light});
+    color: var(--auth-warning-color, #{$warning-color});
   }
-  
+
   &.info {
-    background-color: $info-light;
-    color: color.adjust($info-color, $lightness: -10%);
+    background-color: var(--auth-info-light, #{$info-light});
+    color: var(--auth-info-color, #{$info-color});
   }
 }
 
@@ -206,17 +209,17 @@ a {
 .text-left { text-align: left; }
 .text-right { text-align: right; }
 
-.mt-xs { margin-top: $spacing-xs; }
-.mt-sm { margin-top: $spacing-sm; }
-.mt-md { margin-top: $spacing-md; }
-.mt-lg { margin-top: $spacing-lg; }
-.mt-xl { margin-top: $spacing-xl; }
+.mt-xs { margin-top: var(--auth-spacing-xs, #{$spacing-xs}); }
+.mt-sm { margin-top: var(--auth-spacing-sm, #{$spacing-sm}); }
+.mt-md { margin-top: var(--auth-spacing-md, #{$spacing-md}); }
+.mt-lg { margin-top: var(--auth-spacing-lg, #{$spacing-lg}); }
+.mt-xl { margin-top: var(--auth-spacing-xl, #{$spacing-xl}); }
 
-.mb-xs { margin-bottom: $spacing-xs; }
-.mb-sm { margin-bottom: $spacing-sm; }
-.mb-md { margin-bottom: $spacing-md; }
-.mb-lg { margin-bottom: $spacing-lg; }
-.mb-xl { margin-bottom: $spacing-xl; }
+.mb-xs { margin-bottom: var(--auth-spacing-xs, #{$spacing-xs}); }
+.mb-sm { margin-bottom: var(--auth-spacing-sm, #{$spacing-sm}); }
+.mb-md { margin-bottom: var(--auth-spacing-md, #{$spacing-md}); }
+.mb-lg { margin-bottom: var(--auth-spacing-lg, #{$spacing-lg}); }
+.mb-xl { margin-bottom: var(--auth-spacing-xl, #{$spacing-xl}); }
 
 .hidden { display: none; }
 .flex { display: flex; }

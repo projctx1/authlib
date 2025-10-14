@@ -3,36 +3,36 @@
 // Input base styles
 @mixin input-base {
   width: 100%;
-  padding: $spacing-md;
-  font-size: $font-size-base;
-  font-family: $font-family;
+  padding: var(--auth-spacing-md, #{$spacing-md});
+  font-size: var(--auth-font-size-base, #{$font-size-base});
+  font-family: var(--auth-font-family, #{$font-family});
   color: var(--text-primary);
   background-color: var(--bg-primary);
-  border: $border-width solid var(--border-color);
-  border-radius: $border-radius-md;
-  transition: all $transition-base;
+  border: var(--auth-border-width, #{$border-width}) solid var(--border-color);
+  border-radius: var(--auth-border-radius-md, #{$border-radius-md});
+  transition: all var(--auth-transition-base, #{$transition-base});
   outline: none;
-  
+
   &::placeholder {
     color: var(--text-tertiary);
   }
-  
+
   &:focus {
-    border-color: $primary-color;
-    box-shadow: 0 0 0 3px rgba($primary-color, 0.1);
+    border-color: var(--auth-primary-color, #{$primary-color});
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
   }
-  
+
   &:disabled {
     opacity: 0.6;
     cursor: not-allowed;
     background-color: var(--bg-disabled);
   }
-  
+
   &.has-error {
-    border-color: $error-color;
-    
+    border-color: var(--auth-error-color, #{$error-color});
+
     &:focus {
-      box-shadow: 0 0 0 3px rgba($error-color, 0.1);
+      box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
     }
   }
 }
@@ -42,26 +42,26 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: $spacing-md $spacing-lg;
-  font-size: $font-size-base;
-  font-weight: $font-weight-medium;
-  font-family: $font-family;
-  line-height: $line-height-tight;
+  padding: var(--auth-spacing-md, #{$spacing-md}) var(--auth-spacing-lg, #{$spacing-lg});
+  font-size: var(--auth-font-size-base, #{$font-size-base});
+  font-weight: var(--auth-font-weight-medium, #{$font-weight-medium});
+  font-family: var(--auth-font-family, #{$font-family});
+  line-height: var(--auth-line-height-tight, #{$line-height-tight});
   border: none;
-  border-radius: $border-radius-md;
+  border-radius: var(--auth-border-radius-md, #{$border-radius-md});
   cursor: pointer;
-  transition: all $transition-base;
+  transition: all var(--auth-transition-base, #{$transition-base});
   outline: none;
   white-space: nowrap;
   user-select: none;
-  
+
   &:disabled {
     opacity: 0.5;
     cursor: not-allowed;
   }
-  
+
   &:focus-visible {
-    outline: 2px solid $primary-color;
+    outline: 2px solid var(--auth-primary-color, #{$primary-color});
     outline-offset: 2px;
   }
 }
@@ -70,14 +70,14 @@
 @mixin button-primary {
   @include button-base;
   color: white;
-  background-color: $primary-color;
-  
+  background-color: var(--auth-primary-color, #{$primary-color});
+
   &:hover:not(:disabled) {
-    background-color: $primary-hover;
+    background-color: var(--auth-primary-hover, #{$primary-hover});
   }
-  
+
   &:active:not(:disabled) {
-    background-color: $primary-active;
+    background-color: var(--auth-primary-active, #{$primary-active});
   }
 }
 
@@ -85,8 +85,8 @@
   @include button-base;
   color: var(--text-primary);
   background-color: var(--bg-secondary);
-  border: $border-width solid var(--border-color);
-  
+  border: var(--auth-border-width, #{$border-width}) solid var(--border-color);
+
   &:hover:not(:disabled) {
     background-color: var(--bg-tertiary);
   }
@@ -94,40 +94,40 @@
 
 @mixin button-text {
   @include button-base;
-  color: $primary-color;
+  color: var(--auth-primary-color, #{$primary-color});
   background-color: transparent;
-  padding: $spacing-sm $spacing-md;
-  
+  padding: var(--auth-spacing-sm, #{$spacing-sm}) var(--auth-spacing-md, #{$spacing-md});
+
   &:hover:not(:disabled) {
-    background-color: $primary-light;
+    background-color: var(--auth-primary-light, #{$primary-light});
   }
 }
 
 // Form error message
 @mixin form-error {
   display: block;
-  margin-top: $spacing-xs;
-  color: $error-color;
-  font-size: $font-size-sm;
-  line-height: $line-height-normal;
+  margin-top: var(--auth-spacing-xs, #{$spacing-xs});
+  color: var(--auth-error-color, #{$error-color});
+  font-size: var(--auth-font-size-sm, #{$font-size-sm});
+  line-height: var(--auth-line-height-normal, #{$line-height-normal});
 }
 
 // Form hint message
 @mixin form-hint {
   display: block;
-  margin-top: $spacing-xs;
+  margin-top: var(--auth-spacing-xs, #{$spacing-xs});
   color: var(--text-secondary);
-  font-size: $font-size-sm;
-  line-height: $line-height-normal;
+  font-size: var(--auth-font-size-sm, #{$font-size-sm});
+  line-height: var(--auth-line-height-normal, #{$line-height-normal});
 }
 
 // Card styles
 @mixin card-base {
   background-color: var(--bg-primary);
-  border: $border-width solid var(--border-color);
-  border-radius: $border-radius-lg;
-  box-shadow: $shadow-md;
-  padding: $spacing-xl;
+  border: var(--auth-border-width, #{$border-width}) solid var(--border-color);
+  border-radius: var(--auth-border-radius-lg, #{$border-radius-lg});
+  box-shadow: var(--auth-shadow-md, #{$shadow-md});
+  padding: var(--auth-spacing-xl, #{$spacing-xl});
 }
 
 // Flex utilities

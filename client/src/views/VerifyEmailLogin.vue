@@ -4,13 +4,12 @@
       <div class="auth-header">
         <div class="brand-logo">
           <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M2 17L12 22L22 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M2 12L12 17L22 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M4 4H20C20.5523 4 21 4.44772 21 5V19C21 19.5523 20.5523 20 20 20H4C3.44772 20 3 19.5523 3 19V5C3 4.44772 3.44772 4 4 4Z" stroke="currentColor" stroke-width="2"/>
+            <path d="M3 5L12 13L21 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
         </div>
         <h1>Verify Email</h1>
-        <p>Complete your account setup</p>
+        <p>Complete your login</p>
       </div>
 
       <div class="auth-step">
@@ -20,35 +19,19 @@
               <path d="M4 4H20C20.5523 4 21 4.44772 21 5V19C21 19.5523 20.5523 20 20 20H4C3.44772 20 3 19.5523 3 19V5C3 4.44772 3.44772 4 4 4Z" stroke="currentColor" stroke-width="2"/>
               <path d="M3 5L12 13L21 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
-            <span>{{ email }}</span>
+            <span>{{ maskedEmail }}</span>
           </div>
           <p class="verification-message">
-            Enter the 6-digit verification code sent to your email to activate your account
+            Enter the 6-digit verification code sent to your email
           </p>
         </div>
 
         <OTPInput
-          v-model="otp"
+          v-model="otpCode"
           :length="6"
-          :unstyled="true"
+          :unstyled="false"
           @complete="handleOTPComplete"
-        >
-          <template #input="{ digits, handleInput, handleKeydown }">
-            <div class="otp-grid">
-              <input
-                v-for="(digit, index) in digits"
-                :key="index"
-                v-model="digits[index]"
-                @input="handleInput(index, $event)"
-                @keydown="handleKeydown(index, $event)"
-                type="text"
-                maxlength="1"
-                class="otp-box"
-                :class="{ filled: digit }"
-              />
-            </div>
-          </template>
-        </OTPInput>
+        />
 
         <div class="form-row">
           <button @click="handleResendOTP" :disabled="isLoading" class="resend-btn">
@@ -61,7 +44,7 @@
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M19 12H5M5 12L12 19M5 12L12 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
-            Back to Register
+            Back
           </button>
         </div>
 
@@ -72,31 +55,12 @@
           </svg>
           {{ error }}
         </div>
-
-        <SubmitButton
-          :is-loading="isLoading"
-          :disabled="otp.length !== 6 || isLoading"
-          :unstyled="true"
-          @click="handleSubmit"
-        >
-          <template #loading>
-            <div class="custom-spinner"></div>
-          </template>
-
-          <template #default>
-            <span>{{ isLoading ? 'Verifying...' : 'Verify Email' }}</span>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <polyline points="20,6 9,17 4,12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </template>
-        </SubmitButton>
       </div>
 
       <!-- Navigation Links -->
       <div class="auth-links">
         <p>
-          Already verified?
-          <router-link to="/login" class="link">Sign in</router-link>
+          <router-link to="/login" class="link">Back to Login</router-link>
         </p>
       </div>
     </div>
@@ -104,99 +68,107 @@
 </template>
 
 <script>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 
 // Import enhanced SDK components
-import { OTPInput, SubmitButton } from '../index.js'
+import { OTPInput } from '../index.js'
 
 export default {
-  name: 'VerifyRegistrationPage',
+  name: 'VerifyEmailLogin',
   components: {
-    OTPInput,
-    SubmitButton
+    OTPInput
   },
+
   setup() {
     const store = useStore()
     const router = useRouter()
 
-    // Get email from store (set during registration)
-    const email = computed(() => store.getters['auth/resetEmail'] || '')
-
     // Form data
-    const otp = ref('')
+    const otpCode = ref('')
+
+    // Get email from store
+    const email = computed(() => store.getters['auth/resetEmail'] || '')
 
     // Computed properties
     const isLoading = computed(() => store.getters['auth/isLoading'])
     const error = computed(() => store.getters['auth/error'])
 
-    // Check if email exists on component mount
-    onMounted(() => {
-      if (!email.value) {
-        console.warn('No email found for verification, redirecting to registration')
-        router.push('/register')
-      }
+    const maskedEmail = computed(() => {
+      if (!email.value) return ''
+      const [local, domain] = email.value.split('@')
+      const masked = local.substring(0, 2) + '*'.repeat(local.length - 2)
+      return `${masked}@${domain}`
     })
 
     // Methods
-    const handleOTPComplete = (otpValue) => {
-      otp.value = otpValue
-      if (otpValue.length === 6) {
+    const handleOTPComplete = (otp) => {
+      otpCode.value = otp
+      // Auto-submit when OTP is complete
+      if (otp.length === 6) {
         handleSubmit()
       }
     }
 
     const handleSubmit = async () => {
-      if (otp.value.length !== 6) {
+      if (otpCode.value.length !== 6) {
+        store.commit('auth/SET_ERROR', 'Please enter a valid 6-digit code')
         return
       }
 
       store.dispatch('auth/clearError')
 
       try {
+        // Use SDK's OTP verification for login
         const result = await store.dispatch('auth/verifyLoginOTP', {
           email: email.value,
-          code: otp.value
+          code: otpCode.value
         })
 
-        console.log('✅ Email Verification Successful!')
+        console.log('✅ Email Login Successful!')
         console.log('🔑 JWT Token:', store.getters['auth/token'])
         console.log('👤 User Data:', result.user)
 
-        // Show success message and redirect to dashboard
+        // Show success message
         store.dispatch('ui/showToast', {
           type: 'success',
-          message: 'Email verified successfully! Welcome aboard!'
+          message: 'Login successful! Welcome!'
         })
 
+        // Redirect to dashboard
         router.push('/dashboard')
-      } catch (e) {
-        otp.value = ''
+
+      } catch (error) {
+        console.error('❌ OTP Verification failed:', error)
+        otpCode.value = '' // Clear on error
       }
     }
 
     const handleResendOTP = async () => {
       try {
         await store.dispatch('auth/sendLoginOTP', { email: email.value })
+
         store.dispatch('ui/showToast', {
           type: 'success',
           message: 'New verification code sent!'
         })
       } catch (error) {
-        console.error('Resend failed:', error)
+        console.error('❌ Resend failed:', error)
       }
     }
 
     const goBack = () => {
-      router.push('/register')
+      router.push('/login')
+      store.dispatch('auth/clearError')
     }
 
     return {
+      otpCode,
       email,
-      otp,
       isLoading,
       error,
+      maskedEmail,
       handleOTPComplete,
       handleSubmit,
       handleResendOTP,
@@ -290,39 +262,6 @@ export default {
   font-size: 0.875rem;
 }
 
-/* OTP Grid */
-.otp-grid {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: 0.5rem;
-  margin-bottom: 1.5rem;
-}
-
-.otp-box {
-  width: 100%;
-  height: 60px;
-  border: 2px solid #e2e8f0;
-  border-radius: 0.75rem;
-  font-size: 1.5rem;
-  font-weight: 600;
-  text-align: center;
-  transition: all 0.2s;
-  background: #f8fafc;
-  color: #374151;
-}
-
-.otp-box:focus {
-  outline: none;
-  border-color: #667eea;
-  background: white;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-}
-
-.otp-box.filled {
-  border-color: #667eea;
-  background: white;
-}
-
 /* Form Row */
 .form-row {
   display: flex;
@@ -374,61 +313,6 @@ export default {
   flex-shrink: 0;
 }
 
-/* Custom Buttons */
-.custom-submit-btn {
-  width: 100%;
-  padding: 1rem 1.5rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  border: none;
-  border-radius: 0.75rem;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  position: relative;
-  overflow: hidden;
-}
-
-.custom-submit-btn:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
-}
-
-.custom-submit-btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-  transform: none;
-}
-
-.custom-submit-btn svg {
-  transition: transform 0.2s ease;
-}
-
-.custom-submit-btn:hover:not(:disabled) svg {
-  transform: translateX(2px);
-}
-
-/* Custom Spinner */
-.custom-spinner {
-  width: 1.25rem;
-  height: 1.25rem;
-  border: 2px solid transparent;
-  border-top: 2px solid currentColor;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
 /* Auth Links */
 .auth-links {
   text-align: center;
@@ -470,15 +354,6 @@ export default {
     flex-direction: column;
     gap: 1rem;
     align-items: stretch;
-  }
-
-  .otp-grid {
-    gap: 0.25rem;
-  }
-
-  .otp-box {
-    height: 50px;
-    font-size: 1.25rem;
   }
 }
 </style>

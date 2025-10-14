@@ -1,5 +1,4 @@
 // Main SDK export file
-import { createApp } from 'vue'
 import store from './store'
 import router from './router'
 
@@ -31,46 +30,123 @@ import LoadingSpinner from './components/feedback/LoadingSpinner.vue'
 // Utilities
 import * as validators from './utils/validators'
 
+// Composables
+import { useTheme } from './composables/useTheme'
+import { useAuth } from './composables/useAuth'
+import { useFormValidation } from './composables/useFormValidation'
+
 // Styles
 import './styles/main.scss'
 
 // Plugin installation function
 const VueAuthSDK = {
   install(app, options = {}) {
-    // Register all components globally
-    app.component('LoginForm', LoginForm)
-    app.component('RegisterForm', RegisterForm)
-    app.component('ForgotPasswordForm', ForgotPasswordForm)
-    app.component('OTPVerificationForm', OTPVerificationForm)
-    
-    app.component('EmailInput', EmailInput)
-    app.component('PasswordInput', PasswordInput)
-    app.component('TextInput', TextInput)
-    app.component('CheckboxInput', CheckboxInput)
-    app.component('OTPInput', OTPInput)
-    
-    app.component('SubmitButton', SubmitButton)
-    app.component('TextButton', TextButton)
-    app.component('SocialLoginButtons', SocialLoginButtons)
-    
-    app.component('AuthCard', AuthCard)
-    app.component('AlertMessage', AlertMessage)
-    app.component('LoadingSpinner', LoadingSpinner)
-    
+    // Merge options with defaults
+    const config = {
+      apiEndpoint: '/api/auth',
+      theme: 'default',
+      injectStyles: true,
+      componentPrefix: '',
+      lazyLoad: false,
+      components: {
+        LoginForm: true,
+        RegisterForm: true,
+        ForgotPasswordForm: true,
+        OTPVerificationForm: true,
+        EmailInput: true,
+        PasswordInput: true,
+        TextInput: true,
+        CheckboxInput: true,
+        OTPInput: true,
+        SubmitButton: true,
+        TextButton: true,
+        SocialLoginButtons: true,
+        AuthCard: true,
+        AlertMessage: true,
+        LoadingSpinner: true
+      },
+      ...options
+    }
+
+    // Lazy load helper
+    const defineAsyncComponent = (loader) => {
+      if (typeof window !== 'undefined' && window.defineAsyncComponent) {
+        return window.defineAsyncComponent(loader)
+      }
+      // Fallback for environments without defineAsyncComponent
+      return loader()
+    }
+
+    // Conditionally register components based on config
+    const registerComponent = (name, componentLoader) => {
+      if (config.components[name]) {
+        const componentName = `${config.componentPrefix}${name}`
+
+        if (config.lazyLoad) {
+          // Lazy load component
+          const asyncComponent = defineAsyncComponent(componentLoader)
+          app.component(componentName, asyncComponent)
+        } else {
+          // Load component immediately
+          const component = componentLoader()
+          app.component(componentName, component)
+        }
+      }
+    }
+
+    // Register composite form components
+    registerComponent('LoginForm', () => LoginForm)
+    registerComponent('RegisterForm', () => RegisterForm)
+    registerComponent('ForgotPasswordForm', () => ForgotPasswordForm)
+    registerComponent('OTPVerificationForm', () => OTPVerificationForm)
+
+    // Register input components
+    registerComponent('EmailInput', () => EmailInput)
+    registerComponent('PasswordInput', () => PasswordInput)
+    registerComponent('TextInput', () => TextInput)
+    registerComponent('CheckboxInput', () => CheckboxInput)
+    registerComponent('OTPInput', () => OTPInput)
+
+    // Register button components
+    registerComponent('SubmitButton', () => SubmitButton)
+    registerComponent('TextButton', () => TextButton)
+    registerComponent('SocialLoginButtons', () => SocialLoginButtons)
+
+    // Register card components
+    registerComponent('AuthCard', () => AuthCard)
+
+    // Register feedback components
+    registerComponent('AlertMessage', () => AlertMessage)
+    registerComponent('LoadingSpinner', () => LoadingSpinner)
+
     // Add store if not already present
     if (!app.config.globalProperties.$store) {
       app.use(store)
     }
-    
-    // Initialize theme
-    store.dispatch('ui/initTheme')
-    
-    // Provide SDK configuration
+
+    // Initialize theme system
+    if (config.theme && config.theme !== 'default') {
+      // Apply custom theme immediately
+      const { applyTheme } = useTheme()
+      applyTheme(config.theme)
+    } else {
+      // Initialize with default theme
+      store.dispatch('ui/initTheme')
+    }
+
+    // Provide SDK configuration globally
     app.provide('authSDKConfig', {
-      apiEndpoint: options.apiEndpoint || '/api/auth',
-      theme: options.theme || 'light',
-      ...options
+      apiEndpoint: config.apiEndpoint,
+      theme: config.theme,
+      injectStyles: config.injectStyles,
+      componentPrefix: config.componentPrefix,
+      ...config
     })
+
+    // Provide theme composable globally
+    app.provide('useTheme', useTheme)
+
+    console.log('🚀 Vue Auth SDK installed with enhanced flexibility!')
   }
 }
 
@@ -81,32 +157,37 @@ export {
   RegisterForm,
   ForgotPasswordForm,
   OTPVerificationForm,
-  
+
   // Input Components
   EmailInput,
   PasswordInput,
   TextInput,
   CheckboxInput,
   OTPInput,
-  
+
   // Button Components
   SubmitButton,
   TextButton,
   SocialLoginButtons,
-  
+
   // Card Components
   AuthCard,
-  
+
   // Feedback Components
   AlertMessage,
   LoadingSpinner,
-  
+
   // Store and Router
   store,
   router,
-  
+
   // Utilities
-  validators
+  validators,
+
+  // Composables
+  useTheme,
+  useAuth,
+  useFormValidation
 }
 
 // Default export (plugin)

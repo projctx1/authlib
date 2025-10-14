@@ -34,6 +34,7 @@
 <script>
 import { computed, ref } from 'vue'
 import { useStore } from 'vuex'
+import { validateField as validateFieldUtil } from '../../utils/validators'
 
 export default {
   name: 'TextInput',
@@ -88,12 +89,18 @@ export default {
       if (props.required) validationRules.unshift('required')
       if (props.minlength) validationRules.push({ minLength: props.minlength })
       if (props.maxlength) validationRules.push({ maxLength: props.maxlength })
-      
-      store.dispatch('validation/validateField', {
-        field: props.fieldName,
-        value,
-        rules: validationRules
-      })
+
+      // Use the validators utility for comprehensive validation
+      const error = validateFieldUtil(value, validationRules)
+
+      if (error) {
+        store.commit('validation/SET_ERROR', {
+          field: props.fieldName,
+          error
+        })
+      } else {
+        store.dispatch('validation/clearField', props.fieldName)
+      }
     }
     
     const handleBlur = () => {
